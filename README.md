@@ -29,7 +29,7 @@ Here are configuration examples for various MCP-compatible AI agents:
   "mcpServers": {
     "template-outlet": {
       "command": "npx",
-      "args": ["-y", "@masum/template-outlet-mcp"]
+      "args": ["-y", "@masum-nishat/template-outlet-mcp"]
     }
   }
 }
@@ -46,7 +46,7 @@ Add via the Amp VS Code extension settings screen or by updating your settings.j
     "template-outlet": {
       "command": "npx",
       "args": [
-        "@masum/template-outlet-mcp"
+        "@masum-nishat/template-outlet-mcp"
       ]
     }
   }
@@ -58,7 +58,7 @@ Add via the Amp VS Code extension settings screen or by updating your settings.j
 Add via the `amp mcp add`command below
 
 ```bash
-  amp mcp add template-outlet -- npx @masum/template-outlet-mcp
+  amp mcp add template-outlet -- npx @masum-nishat/template-outlet-mcp
 ```
 ___
 
@@ -73,7 +73,7 @@ Add one of the following configurations to your Claude Code project's `.mcp.json
   "mcpServers": {
     "template-outlet": {
       "command": "npx",
-      "args": ["-y", "@masum/template-outlet-mcp"]
+      "args": ["-y", "@masum-nishat/template-outlet-mcp"]
     }
   }
 }
@@ -84,7 +84,7 @@ Add one of the following configurations to your Claude Code project's `.mcp.json
 Use the Claude Code CLI to add the Template Outlet MCP server:
 
 ```bash
-  claude mcp add template-outlet npx @masum/template-outlet-mcp
+  claude mcp add template-outlet npx @masum-nishat/template-outlet-mcp
 ```
 ___
 
@@ -100,7 +100,7 @@ ___
 Use the Codex CLI to add the Template Outlet MCP server:
 
 ```bash
-  codex mcp add template-outlet npx "@masum/template-outlet-mcp"
+  codex mcp add template-outlet npx "@masum-nishat/template-outlet-mcp"
 ```
 
 Alternatively, create or edit the configuration file `~/.codex/config.toml` and add:
@@ -108,7 +108,7 @@ Alternatively, create or edit the configuration file `~/.codex/config.toml` and 
 ```toml
 [mcp_servers.template-outlet]
 command = "npx"
-args = ["@masum/template-outlet-mcp"]
+args = ["@masum-nishat/template-outlet-mcp"]
 ```
 
 For more information, see the [Codex MCP documentation](https://github.com/openai/codex/blob/main/codex-rs/config.md#mcp_servers).
@@ -117,7 +117,7 @@ ___
 
 #### Cursor
 
-Go to `Cursor Settings` -> `MCP` -> `Add new MCP Server`. Name to your liking, use `command` type with the command `npx @masum/template-outlet-mcp`. You can also verify config or add command like arguments via clicking `Edit`.
+Go to `Cursor Settings` -> `MCP` -> `Add new MCP Server`. Name to your liking, use `command` type with the command `npx @masum-nishat/template-outlet-mcp`. You can also verify config or add command like arguments via clicking `Edit`.
 
 ___
 
@@ -126,7 +126,7 @@ ___
 Use the Factory CLI to add the Template Outlet MCP server:
 
 ```bash
-  droid mcp add template-outlet "npx @masum/template-outlet-mcp"
+  droid mcp add template-outlet "npx @masum-nishat/template-outlet-mcp"
 ```
 
 Alternatively, type `/mcp` within Factory droid to open an interactive UI for managing MCP servers.
@@ -143,7 +143,7 @@ ___
 
 #### Goose
 
-Go to `Advanced settings` -> `Extensions` -> `Add custom extension`. Name to your liking, use type `STDIO`, and set the `command` to `npx @masum/template-outlet-mcp`. Click "Add Extension".
+Go to `Advanced settings` -> `Extensions` -> `Add custom extension`. Name to your liking, use type `STDIO`, and set the `command` to `npx @masum-nishat/template-outlet-mcp`. Click "Add Extension".
 
 ___
 
@@ -157,7 +157,7 @@ Follow the MCP Servers [documentation](https://kiro.dev/docs/mcp/). For example 
     "template-outlet": {
       "command": "npx",
       "args": [
-        "@masum/template-outlet-mcp"
+        "@masum-nishat/template-outlet-mcp"
       ]
     }
   }
@@ -184,7 +184,7 @@ Follow the MCP Servers [documentation](https://opencode.ai/docs/mcp-servers/). F
       "type": "local",
       "command": [
         "npx",
-        "@masum/template-outlet-mcp"
+        "@masum-nishat/template-outlet-mcp"
       ],
       "enabled": true
     }
@@ -208,7 +208,7 @@ Follow the MCP install [guide](https://code.visualstudio.com/docs/copilot/chat/m
 
 ```bash
 # For VS Code
-code --add-mcp '{"name":"template-outlet","command":"npx","args":["@masum/template-outlet-mcp"]}'
+code --add-mcp '{"name":"template-outlet","command":"npx","args":["@masum-nishat/template-outlet-mcp"]}'
 ```
 
 After installation, the Template Outlet MCP server will be available for use with your GitHub Copilot agent in VS Code.
@@ -226,7 +226,7 @@ Alternatively, use the slash command `/add-mcp` in the Warp prompt and paste the
     "template-outlet": {
       "command": "npx",
       "args": [
-        "@masum/template-outlet-mcp"
+        "@masum-nishat/template-outlet-mcp"
       ]
     }
   }

@@ -1,6 +1,6 @@
 {
-  "name": "@masum/template-outlet-mcp",
-  "version": "1.0.0",
+  "name": "@masum-nishat/template-outlet-mcp",
+  "version": "1.0.1",
   "description": "MCP server for Alpine.js Template Outlet documentation - enables AI assistants to search and retrieve Template Outlet docs",
   "type": "module",
   "main": "index.js",
@@ -13,9 +13,7 @@
     "README.md"
   ],
   "scripts": {
-    "start": "node index.js",
-    "dev": "node --watch index.js",
-    "prepublishOnly": "node index.js --version"
+    "start": "node index.js"
   },
   "keywords": [
     "mcp",
@@ -34,11 +32,14 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/MasumNishat/template-outlet-mcp.git",
-    "directory": "mcp-server"
+    "directory": "template-outlet-mcp"
   },
   "homepage": "https://github.com/MasumNishat/template-outlet-mcp#readme",
   "bugs": {
     "url": "https://github.com/MasumNishat/template-outlet-mcp/issues"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "engines": {
     "node": ">=18.0.0"
