@@ -1,0 +1,49 @@
+{
+  "mcpServers": {
+    "template-outlet": {
+      "command": "template-outlet-mcp"
+    }
+  }
+}
+
+// Alternative configurations:
+
+// Option 1: After global npm install (recommended for end users)
+// npm install -g @masum/template-outlet-mcp
+// {
+//   "mcpServers": {
+//     "template-outlet": {
+//       "command": "template-outlet-mcp"
+//     }
+//   }
+// }
+
+// Option 2: Using npx (no global install required)
+// {
+//   "mcpServers": {
+//     "template-outlet": {
+//       "command": "npx",
+//       "args": ["-y", "@masum/template-outlet-mcp"]
+//     }
+//   }
+// }
+
+// Option 3: Local development with npm link
+// cd /path/to/mcp-server && npm link
+// {
+//   "mcpServers": {
+//     "template-outlet": {
+//       "command": "template-outlet-mcp"
+//     }
+//   }
+// }
+
+// Option 4: Using absolute path (for custom installations)
+// {
+//   "mcpServers": {
+//     "template-outlet": {
+//       "command": "node",
+//       "args": ["/absolute/path/to/mcp-server/index.js"]
+//     }
+//   }
+// }

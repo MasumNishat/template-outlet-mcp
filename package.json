@@ -1,0 +1,58 @@
+{
+  "name": "@masum/template-outlet-mcp",
+  "version": "1.0.0",
+  "description": "MCP server for Alpine.js Template Outlet documentation - enables AI assistants to search and retrieve Template Outlet docs",
+  "type": "module",
+  "main": "index.js",
+  "bin": {
+    "template-outlet-mcp": "./index.js"
+  },
+  "files": [
+    "index.js",
+    "src/",
+    "README.md"
+  ],
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node --watch index.js",
+    "prepublishOnly": "node index.js --version"
+  },
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "alpinejs",
+    "alpine",
+    "documentation",
+    "template-outlet",
+    "model-context-protocol",
+    "claude",
+    "ai",
+    "recursive-components"
+  ],
+  "author": "Masum",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/template-outlet.git",
+    "directory": "mcp-server"
+  },
+  "homepage": "https://github.com/yourusername/template-outlet#readme",
+  "bugs": {
+    "url": "https://github.com/yourusername/template-outlet/issues"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.21.0",
+    "zod": "^3.22.0"
+  },
+  "peerDependencies": {
+    "alpine-template-outlet": "*"
+  },
+  "peerDependenciesMeta": {
+    "alpine-template-outlet": {
+      "optional": true
+    }
+  }
+}
