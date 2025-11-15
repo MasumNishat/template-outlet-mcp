@@ -41,12 +41,14 @@ ___
 Add via the Amp VS Code extension settings screen or by updating your settings.json file:
 
 ```json
-"amp.mcpServers": {
-  "template-outlet": {
-    "command": "npx",
-    "args": [ 
-      "@masum/template-outlet-mcp"
-    ]
+{
+  "amp.mcpServers": {
+    "template-outlet": {
+      "command": "npx",
+      "args": [
+        "@masum/template-outlet-mcp"
+      ]
+    }
   }
 }
 ```
@@ -218,7 +220,7 @@ ___
 Go to `Settings` -> `AI` -> `Manage MCP Servers` -> `+ Add` to [add an MCP Server](https://docs.warp.dev/knowledge-and-collaboration/mcp#adding-an-mcp-server). Use the standard config.
 
 Alternatively, use the slash command `/add-mcp` in the Warp prompt and paste the standard config from above:
-```js
+```json
 {
   "mcpServers": {
     "template-outlet": {
