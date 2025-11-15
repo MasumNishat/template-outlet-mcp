@@ -256,11 +256,11 @@ AI will use the MCP server to search documentation and provide accurate, context
 
 This MCP server exposes the following tools:
 
-| Tool | Purpose | Required Arguments | Optional Arguments |
-|------|---------|--------------------|--------------------|
-| `search-docs` | Search Alpine.js Template Outlet documentation for specific topics, patterns, or examples. | `query` (string) | `section` (enum: `all`, `api`, `examples`, `troubleshooting`, `best-practices`) |
-| `get-example` | Retrieve a specific code example with full implementation details from the documentation. | `example` (enum: `simple-tree`, `nested-menu`, `interactive-tree`, `file-system`, `comment-thread`, `org-chart`) | - |
-| `list-sections` | List all available documentation sections and topics with their hierarchy. | - | - |
+| Tool            | Purpose                                                                                    | Required Arguments                                                                                               | Optional Arguments                                                              |
+|-----------------|--------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------|
+| `search-docs`   | Search Alpine.js Template Outlet documentation for specific topics, patterns, or examples. | `query` (string)                                                                                                 | `section` (enum: `all`, `api`, `examples`, `troubleshooting`, `best-practices`) |
+| `get-example`   | Retrieve a specific code example with full implementation details from the documentation.  | `example` (enum: `simple-tree`, `nested-menu`, `interactive-tree`, `file-system`, `comment-thread`, `org-chart`) | -                                                                               |
+| `list-sections` | List all available documentation sections and topics with their hierarchy.                 | -                                                                                                                | -                                                                               |
 
 ## License
 
