@@ -9,7 +9,7 @@
 // Alternative configurations:
 
 // Option 1: After global npm install (recommended for end users)
-// npm install -g @masum/template-outlet-mcp
+// npm install -g @masum-nishat/template-outlet-mcp
 // {
 //   "mcpServers": {
 //     "template-outlet": {
@@ -23,7 +23,7 @@
 //   "mcpServers": {
 //     "template-outlet": {
 //       "command": "npx",
-//       "args": ["-y", "@masum/template-outlet-mcp"]
+//       "args": ["-y", "@masum-nishat/template-outlet-mcp"]
 //     }
 //   }
 // }
