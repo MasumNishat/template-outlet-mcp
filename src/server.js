@@ -1,14 +1,20 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { z } from 'zod';
+import { readFileSync } from 'fs';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
 import { searchDocumentation } from './tools/searchDocs.js';
 import { getExample } from './tools/getExample.js';
 import { listSections } from './tools/listSections.js';
 
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const packageJson = JSON.parse(readFileSync(join(__dirname, '../package.json'), 'utf-8'));
+
 // Create MCP server instance
 const server = new McpServer({
   name: 'template-outlet-docs',
-  version: '1.0.0',
+  version: packageJson.version,
 });
 
 // Register search-docs tool

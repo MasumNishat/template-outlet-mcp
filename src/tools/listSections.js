@@ -1,16 +1,15 @@
 import fs from 'fs/promises';
-import path from 'path';
-import { fileURLToPath } from 'url';
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const MANUAL_PATH = path.join(__dirname, '../../../template-outlet/manual.md');
+import { getManualPath } from '../config.js';
+import { formatErrorResponse } from '../errors.js';
 
 /**
  * List all documentation sections and their hierarchy
+ * @returns {Promise<Object>} MCP response object with table of contents
+ * @throws {Error} If documentation cannot be read
  */
 export async function listSections() {
   try {
-    const manual = await fs.readFile(MANUAL_PATH, 'utf-8');
+    const manual = await fs.readFile(getManualPath(), 'utf-8');
 
     // Extract all headings
     const headings = [];
@@ -61,14 +60,6 @@ export async function listSections() {
       ],
     };
   } catch (error) {
-    return {
-      content: [
-        {
-          type: 'text',
-          text: `Error listing sections: ${error.message}`,
-        },
-      ],
-      isError: true,
-    };
+    return formatErrorResponse(error);
   }
 }
