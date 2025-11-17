@@ -7,6 +7,7 @@ import { dirname, join } from 'path';
 import { searchDocumentation } from './tools/searchDocs.js';
 import { getExample } from './tools/getExample.js';
 import { listSections } from './tools/listSections.js';
+import { getVersion } from './tools/getVersion.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const packageJson = JSON.parse(readFileSync(join(__dirname, '../package.json'), 'utf-8'));
@@ -105,6 +106,31 @@ server.registerTool(
           {
             type: 'text',
             text: `Error listing sections: ${error.message}`,
+          },
+        ],
+        isError: true,
+      };
+    }
+  }
+);
+
+// Register version tool
+server.registerTool(
+  'version',
+  {
+    description:
+      'Get version information about the Template Outlet MCP server, including package version, MCP SDK version, and related links',
+    inputSchema: {},
+  },
+  async () => {
+    try {
+      return await getVersion();
+    } catch (error) {
+      return {
+        content: [
+          {
+            type: 'text',
+            text: `Error getting version: ${error.message}`,
           },
         ],
         isError: true,
