@@ -45,11 +45,9 @@ export function getDocsPath() {
       '3. Install alpine-template-outlet as a peer dependency',
     {
       details: {
-        checkedPaths: [
-          process.env.TEMPLATE_OUTLET_DOCS_PATH,
-          siblingPath,
-          nodeModulesPath,
-        ].filter(Boolean),
+        checkedPaths: [process.env.TEMPLATE_OUTLET_DOCS_PATH, siblingPath, nodeModulesPath].filter(
+          Boolean
+        ),
       },
     }
   );

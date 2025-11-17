@@ -21,10 +21,16 @@ const server = new McpServer({
 server.registerTool(
   'search-docs',
   {
-    description: 'Search Alpine.js Template Outlet documentation for specific topics, patterns, or examples. Perfect for finding information about recursive rendering, nested structures, or specific use cases.',
+    description:
+      'Search Alpine.js Template Outlet documentation for specific topics, patterns, or examples. Perfect for finding information about recursive rendering, nested structures, or specific use cases.',
     inputSchema: {
-      query: z.string().describe('Search query (e.g., "recursive rendering", "menu example", "troubleshooting infinite loop")'),
-      section: z.enum(['all', 'api', 'examples', 'troubleshooting', 'best-practices'])
+      query: z
+        .string()
+        .describe(
+          'Search query (e.g., "recursive rendering", "menu example", "troubleshooting infinite loop")'
+        ),
+      section: z
+        .enum(['all', 'api', 'examples', 'troubleshooting', 'best-practices'])
         .optional()
         .default('all')
         .describe('Limit search to specific section (optional, defaults to "all")'),
@@ -52,16 +58,19 @@ server.registerTool(
 server.registerTool(
   'get-example',
   {
-    description: 'Get a specific code example with full implementation details from the documentation',
+    description:
+      'Get a specific code example with full implementation details from the documentation',
     inputSchema: {
-      example: z.enum([
-        'simple-tree',
-        'nested-menu',
-        'interactive-tree',
-        'file-system',
-        'comment-thread',
-        'org-chart',
-      ]).describe('Name of the example to retrieve'),
+      example: z
+        .enum([
+          'simple-tree',
+          'nested-menu',
+          'interactive-tree',
+          'file-system',
+          'comment-thread',
+          'org-chart',
+        ])
+        .describe('Name of the example to retrieve'),
     },
   },
   async ({ example }) => {

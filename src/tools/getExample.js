@@ -40,9 +40,7 @@ export async function getExample(exampleName) {
     // Extract until next ### or ##
     const afterStart = manual.slice(startIndex);
     const nextSectionMatch = afterStart.match(/\n(##|###)/);
-    const endIndex = nextSectionMatch
-      ? startIndex + nextSectionMatch.index
-      : manual.length;
+    const endIndex = nextSectionMatch ? startIndex + nextSectionMatch.index : manual.length;
 
     const exampleContent = manual.slice(startIndex, endIndex).trim();
 

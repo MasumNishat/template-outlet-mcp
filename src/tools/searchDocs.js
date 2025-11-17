@@ -178,7 +178,10 @@ class DocSearchIndex {
     }
 
     if (sectionFilter === 'all' || sectionFilter === 'troubleshooting') {
-      if (this.index.troubleshooting && this.index.troubleshooting.toLowerCase().includes(normalizedQuery)) {
+      if (
+        this.index.troubleshooting &&
+        this.index.troubleshooting.toLowerCase().includes(normalizedQuery)
+      ) {
         results.push({
           type: 'Troubleshooting',
           snippet: this.getRelevantSnippet(this.index.troubleshooting, normalizedQuery),
@@ -188,7 +191,10 @@ class DocSearchIndex {
     }
 
     if (sectionFilter === 'all' || sectionFilter === 'best-practices') {
-      if (this.index.bestPractices && this.index.bestPractices.toLowerCase().includes(normalizedQuery)) {
+      if (
+        this.index.bestPractices &&
+        this.index.bestPractices.toLowerCase().includes(normalizedQuery)
+      ) {
         results.push({
           type: 'Best Practices',
           snippet: this.getRelevantSnippet(this.index.bestPractices, normalizedQuery),
@@ -198,7 +204,7 @@ class DocSearchIndex {
     }
 
     // Search in all sections
-    this.index.sections.forEach(section => {
+    this.index.sections.forEach((section) => {
       if (section.content.toLowerCase().includes(normalizedQuery)) {
         results.push({
           type: 'Section',
@@ -239,15 +245,21 @@ class DocSearchIndex {
    */
   getRelevantSnippet(content, query, contextChars = 300) {
     const index = content.toLowerCase().indexOf(query.toLowerCase());
-    if (index === -1) return content.slice(0, contextChars) + '...';
+    if (index === -1) {
+      return content.slice(0, contextChars) + '...';
+    }
 
     const start = Math.max(0, index - contextChars / 2);
     const end = Math.min(content.length, index + query.length + contextChars / 2);
 
     let snippet = content.slice(start, end).trim();
 
-    if (start > 0) snippet = '...' + snippet;
-    if (end < content.length) snippet = snippet + '...';
+    if (start > 0) {
+      snippet = '...' + snippet;
+    }
+    if (end < content.length) {
+      snippet = snippet + '...';
+    }
 
     return snippet;
   }
@@ -272,7 +284,7 @@ class DocSearchIndex {
     // Bonus for exact matches
     const exactMatchBonus = normalizedContent.includes(normalizedQuery) ? 20 : 0;
 
-    return (occurrences * 10) + headingBonus + exactMatchBonus;
+    return occurrences * 10 + headingBonus + exactMatchBonus;
   }
 }
 
@@ -301,10 +313,12 @@ export async function searchDocumentation(query, section = 'all') {
     }
 
     // Format response
-    const content = results.map((result, i) => {
-      const title = result.title ? `${result.type}: ${result.title}` : result.type;
-      return `### ${i + 1}. ${title}\n\n${result.snippet}\n\n---\n`;
-    }).join('\n');
+    const content = results
+      .map((result, i) => {
+        const title = result.title ? `${result.type}: ${result.title}` : result.type;
+        return `### ${i + 1}. ${title}\n\n${result.snippet}\n\n---\n`;
+      })
+      .join('\n');
 
     return {
       content: [

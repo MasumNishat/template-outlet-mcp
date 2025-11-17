@@ -21,7 +21,7 @@ export async function listSections() {
       headings.push({
         level: 2,
         title: match[1].replace(/\[.*?\]\(.*?\)/g, '').trim(), // Remove markdown links
-        position: match.index
+        position: match.index,
       });
     }
 
@@ -31,7 +31,7 @@ export async function listSections() {
       headings.push({
         level: 3,
         title: match[1].replace(/\[.*?\]\(.*?\)/g, '').trim(),
-        position: match.index
+        position: match.index,
       });
     }
 
@@ -39,23 +39,26 @@ export async function listSections() {
     headings.sort((a, b) => a.position - b.position);
 
     // Format output as a table of contents
-    const toc = headings.map(h => {
-      const indent = '  '.repeat(h.level - 2);
-      return `${indent}- ${h.title}`;
-    }).join('\n');
+    const toc = headings
+      .map((h) => {
+        const indent = '  '.repeat(h.level - 2);
+        return `${indent}- ${h.title}`;
+      })
+      .join('\n');
 
     // Count sections by type
-    const h2Count = headings.filter(h => h.level === 2).length;
-    const h3Count = headings.filter(h => h.level === 3).length;
+    const h2Count = headings.filter((h) => h.level === 2).length;
+    const h3Count = headings.filter((h) => h.level === 3).length;
 
     return {
       content: [
         {
           type: 'text',
-          text: `# Alpine.js Template Outlet Documentation Structure\n\n` +
-                `Total sections: ${h2Count} main sections, ${h3Count} subsections\n\n` +
-                `## Table of Contents\n\n${toc}\n\n---\n\n` +
-                `**Tip:** Use the \`search-docs\` tool to find specific information within these sections.`,
+          text:
+            '# Alpine.js Template Outlet Documentation Structure\n\n' +
+            `Total sections: ${h2Count} main sections, ${h3Count} subsections\n\n` +
+            `## Table of Contents\n\n${toc}\n\n---\n\n` +
+            '**Tip:** Use the `search-docs` tool to find specific information within these sections.',
         },
       ],
     };
