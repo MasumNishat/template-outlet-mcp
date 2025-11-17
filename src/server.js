@@ -38,8 +38,7 @@ server.registerTool(
   },
   async ({ query, section }) => {
     try {
-      const result = await searchDocumentation(query, section);
-      return result;
+      return await searchDocumentation(query, section);
     } catch (error) {
       return {
         content: [
@@ -75,8 +74,7 @@ server.registerTool(
   },
   async ({ example }) => {
     try {
-      const result = await getExample(example);
-      return result;
+      return await getExample(example);
     } catch (error) {
       return {
         content: [
@@ -100,8 +98,7 @@ server.registerTool(
   },
   async () => {
     try {
-      const result = await listSections();
-      return result;
+      return await listSections();
     } catch (error) {
       return {
         content: [

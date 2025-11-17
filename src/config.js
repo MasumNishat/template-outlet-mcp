@@ -32,9 +32,7 @@ export function getDocsPath() {
     if (existsSync(envPath)) {
       return envPath;
     }
-    console.warn(
-      `TEMPLATE_OUTLET_DOCS_PATH is set but path does not exist: ${envPath}`
-    );
+    console.warn(`TEMPLATE_OUTLET_DOCS_PATH is set but path does not exist: ${envPath}`);
   }
 
   // 3. Check sibling directory (development setup)
