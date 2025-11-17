@@ -18,7 +18,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
  */
 export function getDocsPath() {
   // 1. Check bundled docs (highest priority - shipped with package)
-  const bundledPath = join(__dirname, '../../docs');
+  const bundledPath = join(__dirname, '../docs');
   if (existsSync(bundledPath)) {
     const manualPath = join(bundledPath, 'manual.md');
     if (existsSync(manualPath)) {
