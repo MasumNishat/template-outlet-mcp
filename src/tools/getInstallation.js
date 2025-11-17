@@ -41,6 +41,14 @@ Use unpkg.com CDN for the latest version without installation. unpkg.com automat
 <head>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script defer src="https://unpkg.com/alpine-template-outlet@latest/dist/alpine-template-outlet.min.js"></script>
+    <script>
+        // Register the template-outlet directive when Alpine initializes
+        document.addEventListener('alpine:init', () => {
+            if (typeof TemplateOutletDirective !== 'undefined') {
+                Alpine.directive('template-outlet', TemplateOutletDirective);
+            }
+        });
+    </script>
 </head>
 <body>
     <!-- Your Alpine.js code here -->
@@ -48,7 +56,12 @@ Use unpkg.com CDN for the latest version without installation. unpkg.com automat
 </html>
 \`\`\`
 
-**Note:** The script order matters! Alpine.js must be loaded first, then Template Outlet.
+**IMPORTANT:** You must register the directive in the \`alpine:init\` event listener, otherwise the \`x-template-outlet\` directive won't work!
+
+**Script Loading Order:**
+1. Alpine.js loads first (with \`defer\`)
+2. Template Outlet library loads second (with \`defer\`)
+3. Registration script runs when Alpine initializes
 
 ### Option 3: Specific Version via CDN
 
@@ -57,43 +70,90 @@ Lock to a specific version for production stability:
 \`\`\`html
 <script defer src="https://unpkg.com/alpinejs@3.14.0/dist/cdn.min.js"></script>
 <script defer src="https://unpkg.com/alpine-template-outlet@1.0.0/dist/alpine-template-outlet.min.js"></script>
+<script>
+    // Register the template-outlet directive when Alpine initializes
+    document.addEventListener('alpine:init', () => {
+        if (typeof TemplateOutletDirective !== 'undefined') {
+            Alpine.directive('template-outlet', TemplateOutletDirective);
+        }
+    });
+</script>
 \`\`\`
 
 ### Option 4: Download and Self-Host
 
 Download the files from unpkg.com and host them yourself:
 
-1. Download: https://unpkg.com/alpine-template-outlet@latest/dist/alpine-template-outlet.min.js
-2. Place in your project's assets folder
-3. Reference the local file:
+1. Download Alpine.js: https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js
+2. Download Template Outlet: https://unpkg.com/alpine-template-outlet@latest/dist/alpine-template-outlet.min.js
+3. Place files in your project's assets folder
+4. Reference the local files with directive registration:
 
 \`\`\`html
+<script defer src="/assets/alpine.min.js"></script>
 <script defer src="/assets/alpine-template-outlet.min.js"></script>
+<script>
+    // Register the template-outlet directive when Alpine initializes
+    document.addEventListener('alpine:init', () => {
+        if (typeof TemplateOutletDirective !== 'undefined') {
+            Alpine.directive('template-outlet', TemplateOutletDirective);
+        }
+    });
+</script>
 \`\`\`
 
-## Quick Start Example
+## Complete Working Example (CDN)
 
-After installation, use Template Outlet in your HTML:
+Here's a complete HTML file that works out of the box:
 
 \`\`\`html
-<div x-data="{
-    items: [
-        { id: 1, name: 'Parent', children: [
-            { id: 2, name: 'Child 1', children: [] },
-            { id: 3, name: 'Child 2', children: [] }
-        ]}
-    ]
-}">
-    <template x-template-outlet="items" x-template-outlet-key="id">
-        <div>
-            <span x-text="$item.name"></span>
-            <div x-show="$item.children.length" style="margin-left: 20px;">
-                <template x-template-outlet="$item.children"></template>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alpine Template Outlet Example</title>
+
+    <!-- Load Alpine.js and Template Outlet from CDN -->
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script defer src="https://unpkg.com/alpine-template-outlet@latest/dist/alpine-template-outlet.min.js"></script>
+
+    <!-- CRITICAL: Register the directive -->
+    <script>
+        document.addEventListener('alpine:init', () => {
+            if (typeof TemplateOutletDirective !== 'undefined') {
+                Alpine.directive('template-outlet', TemplateOutletDirective);
+            }
+        });
+    </script>
+</head>
+<body>
+    <!-- Example: Recursive Tree Structure -->
+    <div x-data="{
+        items: [
+            { id: 1, name: 'Parent', children: [
+                { id: 2, name: 'Child 1', children: [] },
+                { id: 3, name: 'Child 2', children: [
+                    { id: 4, name: 'Grandchild', children: [] }
+                ]}
+            ]}
+        ]
+    }">
+        <template x-template-outlet="items" x-template-outlet-key="id">
+            <div style="margin-left: 20px;">
+                <span x-text="$item.name"></span>
+                <!-- Recursive: render children -->
+                <div x-show="$item.children.length">
+                    <template x-template-outlet="$item.children"></template>
+                </div>
             </div>
-        </div>
-    </template>
-</div>
+        </template>
+    </div>
+</body>
+</html>
 \`\`\`
+
+**Copy and paste this entire example into an HTML file to see it working immediately!**
 
 ## Why unpkg.com?
 
