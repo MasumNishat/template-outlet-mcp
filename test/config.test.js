@@ -20,9 +20,22 @@ describe('config', () => {
   });
 
   describe('getDocsPath', () => {
+    it('should return bundled docs path when it exists', () => {
+      delete process.env.TEMPLATE_OUTLET_DOCS_PATH;
+      vi.mocked(existsSync)
+        .mockReturnValueOnce(true)   // bundledPath exists
+        .mockReturnValueOnce(true);  // manual.md exists
+
+      const result = getDocsPath();
+
+      expect(result).toContain('docs');
+    });
+
     it('should return env path if TEMPLATE_OUTLET_DOCS_PATH is set and exists', () => {
       process.env.TEMPLATE_OUTLET_DOCS_PATH = '/custom/path';
-      vi.mocked(existsSync).mockReturnValueOnce(true);
+      vi.mocked(existsSync)
+        .mockReturnValueOnce(false)  // bundledPath doesn't exist
+        .mockReturnValueOnce(true);   // envPath exists
 
       const result = getDocsPath();
 
@@ -39,7 +52,9 @@ describe('config', () => {
 
     it('should check sibling directory if env var not set', () => {
       delete process.env.TEMPLATE_OUTLET_DOCS_PATH;
-      vi.mocked(existsSync).mockReturnValueOnce(true);
+      vi.mocked(existsSync)
+        .mockReturnValueOnce(false)  // bundledPath doesn't exist
+        .mockReturnValueOnce(true);   // siblingPath exists
 
       const result = getDocsPath();
 
