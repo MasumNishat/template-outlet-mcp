@@ -13,7 +13,16 @@
     "README.md"
   ],
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "prepare": "npm run lint && npm run format:check",
+    "prepublishOnly": "npm test"
   },
   "keywords": [
     "mcp",
@@ -44,9 +53,20 @@
   "engines": {
     "node": ">=18.0.0"
   },
+  "exports": {
+    ".": "./index.js",
+    "./package.json": "./package.json"
+  },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.21.0",
-    "zod": "^3.22.0"
+    "@modelcontextprotocol/sdk": "^1.22.0",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.18.0",
+    "eslint": "^9.18.0",
+    "prettier": "^3.4.2",
+    "vitest": "^2.1.8",
+    "@vitest/coverage-v8": "^2.1.8"
   },
   "peerDependencies": {
     "alpine-template-outlet": "*"

@@ -1,25 +1,38 @@
 import fs from 'fs/promises';
-import path from 'path';
-import { fileURLToPath } from 'url';
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-// Point to the template-outlet docs (now in sibling directory)
-const DOCS_DIR = path.join(__dirname, '../../../template-outlet/');
+import { getManualPath, getReadmePath } from '../config.js';
+import { IndexBuildError, formatErrorResponse } from '../errors.js';
 
 /**
- * Simple documentation search index
+ * Documentation search index for Template Outlet documentation
+ * Provides full-text search capabilities with relevance ranking
  */
 class DocSearchIndex {
   constructor() {
+    /** @type {Object|null} The built search index */
     this.index = null;
+    /** @type {number|null} Timestamp of last index build */
+    this.lastBuildTime = null;
+    /** @type {number} Cache TTL in milliseconds (5 minutes) */
+    this.cacheTTL = 5 * 60 * 1000;
   }
 
+  /**
+   * Build the search index from documentation files
+   * @returns {Promise<Object>} The built index
+   * @throws {Error} If documentation files cannot be loaded
+   */
   async buildIndex() {
-    if (this.index) return this.index;
+    // Check if cache is still valid
+    if (this.index && this.lastBuildTime) {
+      const cacheAge = Date.now() - this.lastBuildTime;
+      if (cacheAge < this.cacheTTL) {
+        return this.index;
+      }
+    }
 
     try {
-      const readme = await fs.readFile(path.join(DOCS_DIR, 'README.md'), 'utf-8');
-      const manual = await fs.readFile(path.join(DOCS_DIR, 'manual.md'), 'utf-8');
+      const readme = await fs.readFile(getReadmePath(), 'utf-8');
+      const manual = await fs.readFile(getManualPath(), 'utf-8');
 
       this.index = {
         sections: this.parseSections(manual),
@@ -30,13 +43,30 @@ class DocSearchIndex {
         readme: readme,
       };
 
+      this.lastBuildTime = Date.now();
       return this.index;
     } catch (error) {
       console.error('Error building search index:', error);
-      throw new Error('Failed to load documentation files');
+      throw new IndexBuildError('Failed to load documentation files', {
+        details: { originalError: error.message },
+      });
     }
   }
 
+  /**
+   * Clear the search index cache
+   * Forces a rebuild on next search
+   */
+  clearCache() {
+    this.index = null;
+    this.lastBuildTime = null;
+  }
+
+  /**
+   * Parse markdown sections from documentation content
+   * @param {string} content - The markdown content to parse
+   * @returns {Array<Object>} Array of section objects with title, content, and position
+   */
   parseSections(content) {
     const sections = [];
     const regex = /^## (.+)$/gm;
@@ -63,6 +93,11 @@ class DocSearchIndex {
     return sections;
   }
 
+  /**
+   * Extract code examples from markdown content
+   * @param {string} content - The markdown content to extract from
+   * @returns {Array<Object>} Array of example objects with code and context
+   */
   extractExamples(content) {
     const examples = [];
     const codeBlockRegex = /```html\n([\s\S]*?)```/g;
@@ -78,27 +113,55 @@ class DocSearchIndex {
     return examples;
   }
 
+  /**
+   * Extract API Reference section from documentation
+   * @param {string} content - The documentation content
+   * @returns {string} The API Reference section content or empty string
+   */
   extractAPI(content) {
     const apiSection = content.match(/## API Reference([\s\S]*?)(?=\n## |$)/);
     return apiSection ? apiSection[1] : '';
   }
 
+  /**
+   * Extract Troubleshooting section from documentation
+   * @param {string} content - The documentation content
+   * @returns {string} The Troubleshooting section content or empty string
+   */
   extractTroubleshooting(content) {
     const troubleSection = content.match(/## Troubleshooting([\s\S]*?)(?=\n## |$)/);
     return troubleSection ? troubleSection[1] : '';
   }
 
+  /**
+   * Extract Best Practices section from documentation
+   * @param {string} content - The documentation content
+   * @returns {string} The Best Practices section content or empty string
+   */
   extractBestPractices(content) {
     const bestPracticesSection = content.match(/## Best Practices([\s\S]*?)(?=\n## |$)/);
     return bestPracticesSection ? bestPracticesSection[1] : '';
   }
 
+  /**
+   * Get text context around a specific position
+   * @param {string} text - The text to extract from
+   * @param {number} position - The position to center around
+   * @param {number} chars - Number of characters to include on each side
+   * @returns {string} The extracted context
+   */
   getContextAround(text, position, chars) {
     const start = Math.max(0, position - chars);
     const end = Math.min(text.length, position + chars);
     return text.slice(start, end).trim();
   }
 
+  /**
+   * Search the documentation index for a query
+   * @param {string} query - The search query
+   * @param {string} sectionFilter - Section filter ('all', 'api', 'examples', 'troubleshooting', 'best-practices')
+   * @returns {Array<Object>} Array of search results sorted by relevance
+   */
   search(query, sectionFilter = 'all') {
     const normalizedQuery = query.toLowerCase();
     const results = [];
@@ -167,6 +230,13 @@ class DocSearchIndex {
     return results.slice(0, 5); // Return top 5 results
   }
 
+  /**
+   * Extract a relevant snippet from content containing the query
+   * @param {string} content - The content to extract from
+   * @param {string} query - The search query
+   * @param {number} contextChars - Number of context characters (default: 300)
+   * @returns {string} The extracted snippet with ellipses if truncated
+   */
   getRelevantSnippet(content, query, contextChars = 300) {
     const index = content.toLowerCase().indexOf(query.toLowerCase());
     if (index === -1) return content.slice(0, contextChars) + '...';
@@ -182,6 +252,12 @@ class DocSearchIndex {
     return snippet;
   }
 
+  /**
+   * Calculate relevance score for content matching a query
+   * @param {string} content - The content to score
+   * @param {string} query - The search query
+   * @returns {number} Relevance score (higher is more relevant)
+   */
   calculateRelevance(content, query) {
     const normalizedContent = content.toLowerCase();
     const normalizedQuery = query.toLowerCase();
@@ -204,6 +280,9 @@ const searchIndex = new DocSearchIndex();
 
 /**
  * Search documentation for a query
+ * @param {string} query - The search query
+ * @param {string} section - Section filter ('all', 'api', 'examples', 'troubleshooting', 'best-practices')
+ * @returns {Promise<Object>} MCP response object with search results
  */
 export async function searchDocumentation(query, section = 'all') {
   try {
@@ -236,14 +315,6 @@ export async function searchDocumentation(query, section = 'all') {
       ],
     };
   } catch (error) {
-    return {
-      content: [
-        {
-          type: 'text',
-          text: `Error searching documentation: ${error.message}`,
-        },
-      ],
-      isError: true,
-    };
+    return formatErrorResponse(error);
   }
 }

@@ -1,5 +1,10 @@
 # Template Outlet MCP Server
 
+[![npm version](https://img.shields.io/npm/v/@masum-nishat/template-outlet-mcp.svg)](https://www.npmjs.com/package/@masum-nishat/template-outlet-mcp)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Node.js Version](https://img.shields.io/node/v/@masum-nishat/template-outlet-mcp.svg)](https://nodejs.org)
+[![CI](https://github.com/MasumNishat/template-outlet-mcp/workflows/CI/badge.svg)](https://github.com/MasumNishat/template-outlet-mcp/actions)
+
 > 🤖 Enable AI assistants like Claude to intelligently search and retrieve Alpine.js Template Outlet documentation
 
 An MCP (Model Context Protocol) server that provides three powerful tools for accessing Template Outlet documentation: documentation search, code example retrieval, and section navigation.

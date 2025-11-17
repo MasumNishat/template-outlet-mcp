@@ -1,10 +1,11 @@
 import fs from 'fs/promises';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import { getManualPath } from '../config.js';
+import { ExampleNotFoundError, formatErrorResponse } from '../errors.js';
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const MANUAL_PATH = path.join(__dirname, '../../../template-outlet/manual.md');
-
+/**
+ * Mapping of example names to their section markers in the manual
+ * @type {Object<string, string>}
+ */
 const EXAMPLE_MARKERS = {
   'simple-tree': 'Example 1: Simple Tree Structure',
   'nested-menu': 'Example 2: Nested Menu',
@@ -15,16 +16,19 @@ const EXAMPLE_MARKERS = {
 };
 
 /**
- * Get a specific example from the documentation
+ * Get a specific code example from the documentation
+ * @param {string} exampleName - Name of the example to retrieve (see EXAMPLE_MARKERS)
+ * @returns {Promise<Object>} MCP response object with example content
+ * @throws {Error} If example is not found or cannot be retrieved
  */
 export async function getExample(exampleName) {
   try {
-    const manual = await fs.readFile(MANUAL_PATH, 'utf-8');
+    const manual = await fs.readFile(getManualPath(), 'utf-8');
     const marker = EXAMPLE_MARKERS[exampleName];
 
     if (!marker) {
-      const available = Object.keys(EXAMPLE_MARKERS).join(', ');
-      throw new Error(`Unknown example: ${exampleName}. Available examples: ${available}`);
+      const available = Object.keys(EXAMPLE_MARKERS);
+      throw new ExampleNotFoundError(exampleName, available);
     }
 
     // Find the example section
@@ -51,14 +55,6 @@ export async function getExample(exampleName) {
       ],
     };
   } catch (error) {
-    return {
-      content: [
-        {
-          type: 'text',
-          text: `Error retrieving example: ${error.message}`,
-        },
-      ],
-      isError: true,
-    };
+    return formatErrorResponse(error);
   }
 }
