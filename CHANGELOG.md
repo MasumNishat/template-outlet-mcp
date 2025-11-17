@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.1] - 2025-01-18
+
+### Fixed
+- **Critical**: Fixed MCP server startup failure when installed via npx
+- Bundled comprehensive Template Outlet documentation with package
+- Updated config.js to prioritize bundled documentation over external sources
+- Added docs/ directory to published package files
+
+### Added
+- Complete Template Outlet documentation (README.md and manual.md)
+- 6 practical examples (tree, menu, file system, comments, etc.)
+- Comprehensive API reference, best practices, and troubleshooting guide
+
+### Changed
+- Documentation path resolution now checks bundled docs first for zero-configuration usage
+- Updated package.json to include docs/ and LICENSE in published files
+
 ## [2.0.0] - 2025-01-17
 
 ### 🎉 Major Release - Complete Package Overhaul

@@ -8,30 +8,42 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 /**
  * Get the documentation directory path
  * Tries multiple locations in order:
- * 1. TEMPLATE_OUTLET_DOCS_PATH environment variable
- * 2. Sibling directory (development setup)
- * 3. node_modules/alpine-template-outlet (peer dependency)
+ * 1. Bundled docs directory (shipped with package)
+ * 2. TEMPLATE_OUTLET_DOCS_PATH environment variable
+ * 3. Sibling directory (development setup)
+ * 4. node_modules/alpine-template-outlet (peer dependency)
  *
  * @returns {string} Path to the template-outlet documentation directory
  * @throws {Error} If documentation directory cannot be found
  */
 export function getDocsPath() {
-  // 1. Check environment variable
+  // 1. Check bundled docs (highest priority - shipped with package)
+  const bundledPath = join(__dirname, '../docs');
+  if (existsSync(bundledPath)) {
+    const manualPath = join(bundledPath, 'manual.md');
+    if (existsSync(manualPath)) {
+      return bundledPath;
+    }
+  }
+
+  // 2. Check environment variable
   if (process.env.TEMPLATE_OUTLET_DOCS_PATH) {
     const envPath = process.env.TEMPLATE_OUTLET_DOCS_PATH;
     if (existsSync(envPath)) {
       return envPath;
     }
-    console.warn(`TEMPLATE_OUTLET_DOCS_PATH is set but path does not exist: ${envPath}`);
+    console.warn(
+      `TEMPLATE_OUTLET_DOCS_PATH is set but path does not exist: ${envPath}`
+    );
   }
 
-  // 2. Check sibling directory (development setup)
+  // 3. Check sibling directory (development setup)
   const siblingPath = join(__dirname, '../../../template-outlet');
   if (existsSync(siblingPath)) {
     return siblingPath;
   }
 
-  // 3. Check node_modules (peer dependency)
+  // 4. Check node_modules (peer dependency)
   const nodeModulesPath = join(__dirname, '../../alpine-template-outlet');
   if (existsSync(nodeModulesPath)) {
     return nodeModulesPath;
@@ -40,14 +52,18 @@ export function getDocsPath() {
   // If nothing found, throw error with helpful message
   throw new DocumentationNotFoundError(
     'Template Outlet documentation not found. Please either:\n' +
-      '1. Set TEMPLATE_OUTLET_DOCS_PATH environment variable to the docs location\n' +
-      '2. Clone the template-outlet repository as a sibling directory\n' +
-      '3. Install alpine-template-outlet as a peer dependency',
+      '1. Use the bundled documentation (included with package)\n' +
+      '2. Set TEMPLATE_OUTLET_DOCS_PATH environment variable to the docs location\n' +
+      '3. Clone the template-outlet repository as a sibling directory\n' +
+      '4. Install alpine-template-outlet as a peer dependency',
     {
       details: {
-        checkedPaths: [process.env.TEMPLATE_OUTLET_DOCS_PATH, siblingPath, nodeModulesPath].filter(
-          Boolean
-        ),
+        checkedPaths: [
+          bundledPath,
+          process.env.TEMPLATE_OUTLET_DOCS_PATH,
+          siblingPath,
+          nodeModulesPath,
+        ].filter(Boolean),
       },
     }
   );
