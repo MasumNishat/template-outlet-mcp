@@ -49,6 +49,26 @@ describe('Tool Integration Tests', () => {
       expect(result.content[0].text).toContain(packageJson.name);
     });
   });
+
+  describe('getInstallation', () => {
+    it('should be defined', async () => {
+      const { getInstallation } = await import('../src/tools/getInstallation.js');
+      expect(getInstallation).toBeDefined();
+      expect(typeof getInstallation).toBe('function');
+    });
+
+    it('should return installation instructions', async () => {
+      const { getInstallation } = await import('../src/tools/getInstallation.js');
+      const result = await getInstallation();
+
+      expect(result).toBeDefined();
+      expect(result.content).toBeDefined();
+      expect(result.content[0].type).toBe('text');
+      expect(result.content[0].text).toContain('npm install alpine-template-outlet');
+      expect(result.content[0].text).toContain('unpkg.com');
+      expect(result.content[0].text).toContain('CDN');
+    });
+  });
 });
 
 // Note: Full integration tests require actual documentation files
