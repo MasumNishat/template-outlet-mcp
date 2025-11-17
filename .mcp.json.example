@@ -1,14 +1,16 @@
+// RECOMMENDED: Using npx (no install required)
 {
   "mcpServers": {
     "template-outlet": {
-      "command": "template-outlet-mcp"
+      "command": "npx",
+      "args": ["-y", "@masum-nishat/template-outlet-mcp"]
     }
   }
 }
 
 // Alternative configurations:
 
-// Option 1: After global npm install (recommended for end users)
+// Option 1: After global npm install
 // npm install -g @masum-nishat/template-outlet-mcp
 // {
 //   "mcpServers": {
@@ -18,7 +20,7 @@
 //   }
 // }
 
-// Option 2: Using npx (no global install required)
+// Option 2: Using npx with args (same as recommended above)
 // {
 //   "mcpServers": {
 //     "template-outlet": {
