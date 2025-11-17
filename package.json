@@ -1,6 +1,6 @@
 {
   "name": "@masum-nishat/template-outlet-mcp",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "MCP server for Alpine.js Template Outlet documentation - enables AI assistants to search and retrieve Template Outlet docs",
   "type": "module",
   "main": "index.js",
@@ -10,7 +10,9 @@
   "files": [
     "index.js",
     "src/",
-    "README.md"
+    "docs/",
+    "README.md",
+    "LICENSE"
   ],
   "scripts": {
     "start": "node index.js",
