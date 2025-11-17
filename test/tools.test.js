@@ -1,4 +1,10 @@
 import { describe, it, expect } from 'vitest';
+import { readFileSync } from 'fs';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const packageJson = JSON.parse(readFileSync(join(__dirname, '../package.json'), 'utf-8'));
 
 describe('Tool Integration Tests', () => {
   describe('searchDocumentation', () => {
@@ -22,6 +28,25 @@ describe('Tool Integration Tests', () => {
       const { listSections } = await import('../src/tools/listSections.js');
       expect(listSections).toBeDefined();
       expect(typeof listSections).toBe('function');
+    });
+  });
+
+  describe('getVersion', () => {
+    it('should be defined', async () => {
+      const { getVersion } = await import('../src/tools/getVersion.js');
+      expect(getVersion).toBeDefined();
+      expect(typeof getVersion).toBe('function');
+    });
+
+    it('should return version information', async () => {
+      const { getVersion } = await import('../src/tools/getVersion.js');
+      const result = await getVersion();
+
+      expect(result).toBeDefined();
+      expect(result.content).toBeDefined();
+      expect(result.content[0].type).toBe('text');
+      expect(result.content[0].text).toContain(packageJson.version);
+      expect(result.content[0].text).toContain(packageJson.name);
     });
   });
 });
