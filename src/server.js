@@ -8,6 +8,7 @@ import { searchDocumentation } from './tools/searchDocs.js';
 import { getExample } from './tools/getExample.js';
 import { listSections } from './tools/listSections.js';
 import { getVersion } from './tools/getVersion.js';
+import { getInstallation } from './tools/getInstallation.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const packageJson = JSON.parse(readFileSync(join(__dirname, '../package.json'), 'utf-8'));
@@ -131,6 +132,31 @@ server.registerTool(
           {
             type: 'text',
             text: `Error getting version: ${error.message}`,
+          },
+        ],
+        isError: true,
+      };
+    }
+  }
+);
+
+// Register installation guide tool
+server.registerTool(
+  'get-installation',
+  {
+    description:
+      'Get installation instructions for Alpine.js Template Outlet package, including npm installation and CDN usage via unpkg.com with quick start examples',
+    inputSchema: {},
+  },
+  async () => {
+    try {
+      return await getInstallation();
+    } catch (error) {
+      return {
+        content: [
+          {
+            type: 'text',
+            text: `Error getting installation guide: ${error.message}`,
           },
         ],
         isError: true,
