@@ -15,14 +15,14 @@ export async function getInstallation() {
 Install via npm for use with build tools like Vite, Webpack, or esbuild:
 
 \`\`\`bash
-npm install alpine-template-outlet
+npm install @masum-nishat/alpine-template-outlet
 \`\`\`
 
 Then import and register the plugin:
 
 \`\`\`javascript
 import Alpine from 'alpinejs';
-import templateOutlet from 'alpine-template-outlet';
+import templateOutlet from '@masum-nishat/alpine-template-outlet';
 
 // Register the plugin
 Alpine.plugin(templateOutlet);
@@ -39,13 +39,14 @@ Use unpkg.com CDN for the latest version without installation. unpkg.com automat
 <!DOCTYPE html>
 <html>
 <head>
+    <!-- CRITICAL: Plugin loads WITHOUT defer, BEFORE Alpine -->
+    <script src="https://unpkg.com/@masum-nishat/alpine-template-outlet@latest/dist/alpine-template-outlet.cdn.min.js"></script>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <script defer src="https://unpkg.com/alpine-template-outlet@latest/dist/alpine-template-outlet.min.js"></script>
     <script>
         // Register the template-outlet directive when Alpine initializes
         document.addEventListener('alpine:init', () => {
-            if (typeof TemplateOutletDirective !== 'undefined') {
-                Alpine.directive('template-outlet', TemplateOutletDirective);
+            if (typeof window.TemplateOutletDirective !== 'undefined') {
+                Alpine.directive('template-outlet', window.TemplateOutletDirective);
             }
         });
     </script>
@@ -56,25 +57,30 @@ Use unpkg.com CDN for the latest version without installation. unpkg.com automat
 </html>
 \`\`\`
 
-**IMPORTANT:** You must register the directive in the \`alpine:init\` event listener, otherwise the \`x-template-outlet\` directive won't work!
+**CRITICAL REQUIREMENTS:**
 
-**Script Loading Order:**
-1. Alpine.js loads first (with \`defer\`)
-2. Template Outlet library loads second (with \`defer\`)
-3. Registration script runs when Alpine initializes
+1. **Script Loading Order:**
+   - Plugin loads **WITHOUT defer** (synchronous, loads immediately)
+   - Alpine.js loads **WITH defer** (loads after DOM parsing)
+   - Plugin MUST load before Alpine.js to be available during \`alpine:init\`
+
+2. **Manual Registration Required:**
+   - You MUST manually register the directive in \`alpine:init\`
+   - Access via \`window.TemplateOutletDirective\`
 
 ### Option 3: Specific Version via CDN
 
 Lock to a specific version for production stability:
 
 \`\`\`html
+<!-- Plugin loads WITHOUT defer, BEFORE Alpine -->
+<script src="https://unpkg.com/@masum-nishat/alpine-template-outlet@1.1.1/dist/alpine-template-outlet.cdn.min.js"></script>
 <script defer src="https://unpkg.com/alpinejs@3.14.0/dist/cdn.min.js"></script>
-<script defer src="https://unpkg.com/alpine-template-outlet@1.0.0/dist/alpine-template-outlet.min.js"></script>
 <script>
     // Register the template-outlet directive when Alpine initializes
     document.addEventListener('alpine:init', () => {
-        if (typeof TemplateOutletDirective !== 'undefined') {
-            Alpine.directive('template-outlet', TemplateOutletDirective);
+        if (typeof window.TemplateOutletDirective !== 'undefined') {
+            Alpine.directive('template-outlet', window.TemplateOutletDirective);
         }
     });
 </script>
@@ -85,18 +91,19 @@ Lock to a specific version for production stability:
 Download the files from unpkg.com and host them yourself:
 
 1. Download Alpine.js: https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js
-2. Download Template Outlet: https://unpkg.com/alpine-template-outlet@latest/dist/alpine-template-outlet.min.js
+2. Download Template Outlet: https://unpkg.com/@masum-nishat/alpine-template-outlet@latest/dist/alpine-template-outlet.cdn.min.js
 3. Place files in your project's assets folder
 4. Reference the local files with directive registration:
 
 \`\`\`html
+<!-- Plugin loads WITHOUT defer, BEFORE Alpine -->
+<script src="/assets/alpine-template-outlet.cdn.min.js"></script>
 <script defer src="/assets/alpine.min.js"></script>
-<script defer src="/assets/alpine-template-outlet.min.js"></script>
 <script>
     // Register the template-outlet directive when Alpine initializes
     document.addEventListener('alpine:init', () => {
-        if (typeof TemplateOutletDirective !== 'undefined') {
-            Alpine.directive('template-outlet', TemplateOutletDirective);
+        if (typeof window.TemplateOutletDirective !== 'undefined') {
+            Alpine.directive('template-outlet', window.TemplateOutletDirective);
         }
     });
 </script>
@@ -114,15 +121,15 @@ Here's a complete HTML file that works out of the box:
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Alpine Template Outlet Example</title>
 
-    <!-- Load Alpine.js and Template Outlet from CDN -->
+    <!-- CRITICAL: Plugin loads WITHOUT defer, BEFORE Alpine -->
+    <script src="https://unpkg.com/@masum-nishat/alpine-template-outlet@latest/dist/alpine-template-outlet.cdn.min.js"></script>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <script defer src="https://unpkg.com/alpine-template-outlet@latest/dist/alpine-template-outlet.min.js"></script>
 
-    <!-- CRITICAL: Register the directive -->
+    <!-- Register the directive -->
     <script>
         document.addEventListener('alpine:init', () => {
-            if (typeof TemplateOutletDirective !== 'undefined') {
-                Alpine.directive('template-outlet', TemplateOutletDirective);
+            if (typeof window.TemplateOutletDirective !== 'undefined') {
+                Alpine.directive('template-outlet', window.TemplateOutletDirective);
             }
         });
     </script>
@@ -139,13 +146,23 @@ Here's a complete HTML file that works out of the box:
             ]}
         ]
     }">
-        <template x-template-outlet="items" x-template-outlet-key="id">
+        <!-- Iterate over root items -->
+        <template x-for="item in items" :key="item.id">
+            <div x-template-outlet="$refs.treeTemplate" x-data="{ node: item }"></div>
+        </template>
+
+        <!-- Recursive tree template -->
+        <template x-ref="treeTemplate">
             <div style="margin-left: 20px;">
-                <span x-text="$item.name"></span>
+                <span x-text="node.name"></span>
                 <!-- Recursive: render children -->
-                <div x-show="$item.children.length">
-                    <template x-template-outlet="$item.children"></template>
-                </div>
+                <template x-if="node.children && node.children.length > 0">
+                    <div>
+                        <template x-for="child in node.children" :key="child.id">
+                            <div x-template-outlet="$refs.treeTemplate" x-data="{ node: child }"></div>
+                        </template>
+                    </div>
+                </template>
             </div>
         </template>
     </div>
@@ -154,6 +171,37 @@ Here's a complete HTML file that works out of the box:
 \`\`\`
 
 **Copy and paste this entire example into an HTML file to see it working immediately!**
+
+## How the Plugin Works
+
+The plugin uses a template reference pattern:
+
+1. **Define a template** with \`x-ref\`:
+   \`\`\`html
+   <template x-ref="treeTemplate">
+       <!-- Your template content -->
+   </template>
+   \`\`\`
+
+2. **Iterate over your data** with \`x-for\`:
+   \`\`\`html
+   <template x-for="item in items" :key="item.id">
+       <div x-template-outlet="$refs.treeTemplate" x-data="{ node: item }"></div>
+   </template>
+   \`\`\`
+
+3. **For recursion**, use the same pattern inside your template to render children:
+   \`\`\`html
+   <template x-for="child in node.children" :key="child.id">
+       <div x-template-outlet="$refs.treeTemplate" x-data="{ node: child }"></div>
+   </template>
+   \`\`\`
+
+**Key Points:**
+- Use \`<div>\` (not \`<template>\`) for \`x-template-outlet\`
+- Always include \`x-data\` to pass data to the template
+- Reference templates with \`$refs.templateName\`
+- The plugin does NOT use \`x-template-outlet-key\` or direct array iteration
 
 ## Why unpkg.com?
 
@@ -164,9 +212,9 @@ Here's a complete HTML file that works out of the box:
 
 ## Package Links
 
-- **NPM Package**: https://www.npmjs.com/package/alpine-template-outlet
-- **GitHub Repository**: https://github.com/your-repo/alpine-template-outlet
-- **unpkg.com CDN**: https://unpkg.com/alpine-template-outlet
+- **NPM Package**: https://www.npmjs.com/package/@masum-nishat/alpine-template-outlet
+- **GitHub Repository**: https://github.com/MasumNishat/template-outlet
+- **unpkg.com CDN**: https://unpkg.com/@masum-nishat/alpine-template-outlet
 
 ## Need More Examples?
 
